@@ -1,0 +1,38 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+#define NODES 8
+
+int optimal8node[8][8] ={ { 0, 1, 0, 0, 1, 0, 0, 1 },
+{ 1, 0, 1, 0, 0, 0, 1, 0 },
+{ 0, 1, 0, 1, 0, 1, 0, 0 },
+{ 0, 0, 1, 0, 1, 0, 0, 1 },
+{ 1, 0, 0, 1, 0, 1, 0, 0 },
+{ 0, 0, 1, 0, 1, 0, 1, 0 },
+{ 0, 1, 0, 0, 0, 1, 0, 1 },
+{ 1, 0, 0, 1, 0, 0, 1, 0 } };
+
+int checkSymmetry(int * graph);
+
+int main(){
+	cout << "CheckSymmetry(8 node optimal) = " << checkSymmetry(&optimal8node[0][0]) << "\n";
+	getchar();
+	return 0;
+}
+
+int checkSymmetry(int * graph){
+	vector<int> neighbors;
+	for (int i = 0; i < NODES/2; i++){
+		neighbors.clear();
+		for (int n = 0; n < NODES; n++){
+			if (graph[NODES * i + n]) neighbors.push_back(n);
+		}
+		//v is the node opposite to
+		int v = (i + NODES / 2) % NODES;
+		for (vector<int>::iterator j = neighbors.begin(); j != neighbors.end(); j++){
+			if (graph[(*j + NODES / 2) % NODES + v * NODES] != 1) return 0;
+		}
+	}
+	return 1;
+}
