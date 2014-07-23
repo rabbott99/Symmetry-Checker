@@ -10,7 +10,7 @@ int optimal8node[16][16] = { { 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1 },
 							 { 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0 },
 							 { 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0 },
 							 { 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1 },
-							 { 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0 },
+							 { 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0 },
 							 { 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0 },
 							 { 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0 },
 							 { 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1 },
@@ -20,9 +20,11 @@ int optimal8node[16][16] = { { 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1 },
 							 { 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0 } };
 
 int checkSymmetry(int * graph, int nodes);
+int checkNodeSplittingSymmetry(int * graph, int nodes);
 
 int main(){
 	cout << "CheckSymmetry(8 node optimal) = " << checkSymmetry(&optimal8node[0][0], 16) << "\n";
+	cout << "CheckNodeSplittingSymmetries() = " << checkNodeSplittingSymmetry(&optimal8node[0][0], 16) << "\n";
 	getchar();
 	return 0;
 }
@@ -41,8 +43,8 @@ int checkSymmetry(int * graph, int nodes){
 			//v is the node opposite to
 			int v = (nodes/2 + x + (nodes/2 + x - i) - 1) % nodes;
 			nonSymmetryFound = false;
-			for (int j = 0; j < 3; j++){
-				int u = (nodes / 2 + x + (nodes / 2 + x - neighbors.at(j)) - 1) % nodes;
+			for (vector<int>::iterator j = neighbors.begin(); j != neighbors.end(); j++){
+				int u = (nodes / 2 + x + (nodes / 2 + x - *j) - 1) % nodes;
 				if (graph[u + v * nodes] != 1){
 					nonSymmetryFound = true;
 					break; 
@@ -51,6 +53,37 @@ int checkSymmetry(int * graph, int nodes){
 			if (nonSymmetryFound) break;
 		}
 		if(nonSymmetryFound == false) symmetries++;
+	}
+	return symmetries;
+}
+
+int checkNodeSplittingSymmetry(int * graph, int nodes){
+	int symmetries = 0;
+	for (int x = 0; x < nodes / 2; x++){
+		bool nonSymmetryFound = false;
+		int y = (x + nodes / 2) % nodes;
+		vector<int> xNeighbors;
+		vector<int> yNeighbors;
+		for (int i = 0; i < nodes; i++){
+			if (graph[8 * i + x]) xNeighbors.push_back(i);
+			if (graph[8 * i + y]) yNeighbors.push_back(i);
+		}
+		for (int i = 0; i < xNeighbors.size() && i < yNeighbors.size(); i++){
+			if ((xNeighbors[i] - x + nodes) % nodes != (yNeighbors[i] - y + nodes) % nodes) nonSymmetryFound = true;
+		}
+		//in the case that the two nodes are symmetric to each other
+		if (!nonSymmetryFound){
+			//remove the nodes and search the remaining graph for symmetry
+			int * trimmedGraph = (int*)malloc((nodes - 2)*(nodes - 2)*sizeof(int));
+			int k = 0;
+			for (int i = 0; i < nodes; i++){
+				for (int j = 0; j < nodes; j++){
+					if (i != x && i != y &&
+						j != x && j != y) trimmedGraph[k++] = graph[nodes * i + j];
+				}
+			}
+			if (checkSymmetry(trimmedGraph, nodes - 2)) symmetries++;
+		}
 	}
 	return symmetries;
 }
