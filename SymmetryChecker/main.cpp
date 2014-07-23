@@ -62,14 +62,42 @@ int checkNodeSplittingSymmetry(int * graph, int nodes){
 	for (int x = 0; x < nodes / 2; x++){
 		bool nonSymmetryFound = false;
 		int y = (x + nodes / 2) % nodes;
-		vector<int> xNeighbors;
-		vector<int> yNeighbors;
+		vector<int> neighbors;
 		for (int i = 0; i < nodes; i++){
-			if (graph[8 * i + x]) xNeighbors.push_back(i);
-			if (graph[8 * i + y]) yNeighbors.push_back(i);
+			if (graph[nodes * i + x]) neighbors.push_back(i);
 		}
-		for (int i = 0; i < xNeighbors.size() && i < yNeighbors.size(); i++){
-			if ((xNeighbors[i] - x + nodes) % nodes != (yNeighbors[i] - y + nodes) % nodes) nonSymmetryFound = true;
+		while (neighbors.size() > 0){
+			int n = neighbors.back();
+			bool finished = true;
+			for (vector<int>::iterator i = neighbors.begin(); i != neighbors.end(); i++){
+				if (*i = n){
+					finished = false;
+					neighbors.erase(i);
+					break;
+				}
+			}
+			if (finished){
+				nonSymmetryFound = true;
+				break;
+			}
+		}
+		while (neighbors.size() > 0){
+			int n = neighbors.back();
+			bool finished = true;
+			for (vector<int>::iterator i = neighbors.begin(); i != neighbors.end(); i++){
+				if (*i = n){
+					finished = false;
+					neighbors.erase(i);
+					break;
+				}
+			}
+			if (finished){
+				nonSymmetryFound = true;
+				break;
+			}
+		}
+		for (int i = 0; i < nodes; i++){
+			if (graph[nodes * i + y]) neighbors.push_back(i);
 		}
 		//in the case that the two nodes are symmetric to each other
 		if (!nonSymmetryFound){
