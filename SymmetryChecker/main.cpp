@@ -18,28 +18,53 @@ int optimal16node[16][16] = { { 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1 }
 							  { 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0 },
 							  { 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1 },
 							  { 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0 } };
+int sixteenNode[16][16] = { { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+                            { 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+							{ 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+							{ 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+							{ 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 },
+							{ 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+							{ 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0 },
+							{ 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0 },
+							{ 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0 },
+							{ 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0 },
+							{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0 },
+							{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0 },
+							{ 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0 },
+							{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0 },
+							{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1 },
+							{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 } };
 
 int eightNode[8][8] = { { 0, 1, 0, 0, 0, 0, 0, 1 },
 						{ 1, 0, 1, 0, 0, 0, 0, 0 },
 						{ 0, 1, 0, 1, 0, 0, 0, 0 },
-						{ 0, 0, 1, 0, 1, 0, 0, 0 },
+						{ 0, 0, 1, 0, 1, 0, 0, 1 },
 						{ 0, 0, 0, 1, 0, 1, 0, 0 },
 						{ 0, 0, 0, 0, 1, 0, 1, 0 },
 						{ 0, 0, 0, 0, 0, 1, 0, 1 },
-						{ 1, 0, 0, 0, 0, 0, 1, 0 } };
-
+						{ 1, 0, 0, 1, 0, 0, 1, 0 } };
 
 int checkSymmetry(int * graph, int nodes);
+int checkBetweenNodeSymmetry(int * graph, int nodes);
 int checkNodeSplittingSymmetry(int * graph, int nodes);
 
 int main(){
-	cout << "CheckSymmetry(8 node optimal) = " << checkSymmetry(&eightNode[0][0], 8) << "\n";
-	cout << "CheckNodeSplittingSymmetries() = " << checkNodeSplittingSymmetry(&eightNode[0][0], 8) << "\n";
+	int j = 0;
+	getchar();
+	for (int i = 0; i < 10000; i++){
+		j = checkSymmetry(&optimal16node[0][0], 16);
+	}
+	cout << "done!\n";
 	getchar();
 	return 0;
 }
 
 int checkSymmetry(int * graph, int nodes){
+	return checkBetweenNodeSymmetry(graph, nodes) +
+		 checkNodeSplittingSymmetry(graph, nodes);
+}
+
+int checkBetweenNodeSymmetry(int * graph, int nodes){
 	int counter = 0;
 	vector<int> neighbors;
 	int symmetries = 0;
