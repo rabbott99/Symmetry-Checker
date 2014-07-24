@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <vector>
 using namespace std;
 
@@ -22,7 +23,7 @@ int sixteenNode[16][16] = { { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
                             { 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
 							{ 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
 							{ 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-							{ 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 },
+							{ 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
 							{ 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
 							{ 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0 },
 							{ 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0 },
@@ -30,7 +31,7 @@ int sixteenNode[16][16] = { { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
 							{ 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0 },
 							{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0 },
 							{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0 },
-							{ 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0 },
+							{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0 },
 							{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0 },
 							{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1 },
 							{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 } };
@@ -47,14 +48,12 @@ int eightNode[8][8] = { { 0, 1, 0, 0, 0, 0, 0, 1 },
 int checkSymmetry(int * graph, int nodes);
 int checkBetweenNodeSymmetry(int * graph, int nodes);
 int checkNodeSplittingSymmetry(int * graph, int nodes);
+int * load_file(char * filename);
 
 int main(){
-	int j = 0;
-	getchar();
-	for (int i = 0; i < 10000; i++){
-		j = checkSymmetry(&optimal16node[0][0], 16);
-	}
-	cout << "done!\n";
+	int * x = load_file("TestFile.txt");
+	cout << "CheckSymmetry(x): " << checkSymmetry(x, 16);
+	delete[] x;
 	getchar();
 	return 0;
 }
@@ -171,4 +170,17 @@ int checkNodeSplittingSymmetry(int * graph, int nodes){
 		}
 	}
 	return symmetries;
+}
+
+int * load_file(char * filename, int nodes){
+	ifstream file (filename);
+	int * x = (int*)malloc(nodes * nodes * sizeof(int));
+	int k = 0;
+	char c;
+	while (!file.eof() && k < nodes * nodes){
+		file >> noskipws >> c;
+		if (c == '0') x[k++] = 0;
+		else if (c == '1') x[k++] = 1;
+	}
+	return x;
 }
